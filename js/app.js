@@ -33,9 +33,11 @@ $(function(){
 
 var model = {
     days: 12,
+    students: 5,
     studentNames : [
         {
             name: "Slappy the Frog"
+            
 
         },
         {
@@ -55,6 +57,7 @@ var model = {
         if(!localStorage.attendance)
         {
             localStorage.attendance = JSON.stringify([]);
+
         }
     },
     add: function(obj){
@@ -69,8 +72,8 @@ var model = {
 
 var octopus = {
     init: function(){
-        view.renderTable();
-        view.renderCheckBoxes();
+        view.renderTableHead();
+        view.renderTableRow();
         view.renderMissed();
     },
     getAttendance: function(){
@@ -78,6 +81,9 @@ var octopus = {
     },
     getDays: function(){
         return model.days;
+    },
+    getNumberStudents: function(){
+        return model.students;
     }
 
 };
@@ -88,32 +94,50 @@ var view = {
         this.allCheckboxes = $('tbody input');
 
     },
-    renderTable: function(){
+    renderTableHead: function(){
         for(var i=octopus.getDays();i>0;i--)
         {
             $("<th>"+i+"</th>").insertAfter('thead .name-col');
-        }
-    },
-    renderCheckBoxes: function(){
-        console.log("hi");
-        var htmlStr = "";
-        $.each(octopus.getAttendance(), function(index, element){
-            console.log(index,element);
-        });
-        for(var i=0;i<octopus.getDays();i++)
-        {
-            htmlStr += '<td class="attend-col"><input type="checkbox"></td>';
-        }
-        return htmlStr;
-    },
-    renderMissed: function(){
 
+        }
+    },
+    renderTableRow: function(){
+        $.each(octopus.getAttendance(), function(index,element){
+            //create table row
+            var newTR = document.createElement("tr");
+            newTR.setAttribute('class', 'student');
+
+            //add name
+            var newTD = document.createElement("td");
+            newTD.setAttribute('class', 'name-col');
+            newTD.textContent = index;
+            newTR.appendChild(newTD);
+
+            //create checkboxes
+            $.each(element, function(){
+                var newInput = document.createElement("input");
+                newInput.setAttribute('type', 'checkbox');
+                var newTD2 = document.createElement("td");
+                newTD2.setAttribute('class', 'attend-col');
+                newTD2.appendChild(newInput);
+                newTR.appendChild(newTD2);
+            });
+            
+            //add missing column
+            var newTD3 = document.createElement("td");
+            newTD3.setAttribute('class', 'missed-col');
+            newTD3.textContent = 0;//to be changed
+            newTR.appendChild(newTD3);
+
+            //add tr to tbody
+            $('tbody').append(newTR);
+        });       
     }
 };
 
 
 /* STUDENT APPLICATION */
-function hello() {
+var hello = function(){
         
 
     // Count a student's missed days
