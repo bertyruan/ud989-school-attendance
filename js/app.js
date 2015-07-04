@@ -36,7 +36,7 @@ var model = {
         if(!localStorage.attendance)
         {
             console.log('Creating attendance records...');
-            for(var i=0;i<model.studentNames.length();i++)
+            for(var i=0;i<model.studentNames.length;i++)
             {
                 for(var j=0;j<model.days;j++)
                 {
@@ -137,6 +137,7 @@ var view = {
     updateFields: function() {
         $allCheckboxes = $('tbody input');
         $allCheckboxes.on('click', function() {
+            view.countMissing();
             var data = [];
             var studentRows = $('tbody .student');
             studentRows.each(function() {
